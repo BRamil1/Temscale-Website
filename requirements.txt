@@ -1,2 +1,4 @@
 uvicorn
-fastapi
+fastapi~=0.111.1
+temscale~=1.1.1
+pydantic~=2.8.2

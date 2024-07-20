@@ -1,14 +1,20 @@
-from fastapi import FastAPI
-from fastapi.responses import Response
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from temscale import temscale
 
 app = FastAPI()
 
 
-@app.get("/", )
-async def root():
-    return Response("website/index.html")
+class TemscaleModel(BaseModel):
+    value: int
+    type: str
 
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+@app.post("/convert")
+async def convert(temscale_model: TemscaleModel, new_type: str):
+    try:
+        tem = temscale.Temscale(temscale_model.value, temscale_model.type)
+        tem.convert(new_type)
+        return temscale.to_dict(tem)
+    except TypeError:
+        return HTTPException(status_code=400, detail="Invalid type")
