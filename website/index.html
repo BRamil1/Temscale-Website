@@ -14,34 +14,71 @@
                 <h2>Temscale Website</h2>
             </div>
             <div class="row align-items-center">
-                <form action="http://127.0.0.1:8000/convert" method="post" target="_self" enctype="application/x-www-form-urlencoded">
-                    <div class="mb-3">
-                        <label for="value" class="form-label">Keep track of temperature values</label>
-                        <input type="text" class="form-control" id="value" placeholder="value" name="value">
-                    </div>
-                    <div class="mb-3">
-                        <label for="old_type" class="form_label">select the temperature type</label>
-                        <select class="form-select" id="old_type" aria-label="Default select example" name="old_type">
-                            <option value="C" name="C" selected>Celsius</option>
-                            <option value="K" name="K">Kelvin</option>
-                            <option value="F" name="F">Fahrenheit</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="new_type" class="form-label">select a new temperature type</label>
-                        <select class="form-select" id="new_type" aria-label="Default select example" name="new_type">
-                            <option value="C" name="C" selected>Celsius</option>
-                            <option value="K" name="K">Kelvin</option>
-                            <option value="F" name="F">Fahrenheit</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-outline-success">Convert</button>
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <label for="value-temscale" class="form-label">Keep track of temperature values</label>
+                    <input type="text" class="form-control" id="value-temscale" placeholder="value" name="value">
+                </div>
+                <div class="mb-3">
+                    <label for="old-type-temscale" class="form_label">select the temperature type</label>
+                    <select class="form-select" id="old-type-temscale" aria-label="Default select example" name="old_type">
+                        <option value=1 name="C" selected>Celsius</option>
+                        <option value=2 name="K">Kelvin</option>
+                        <option value=3 name="F">Fahrenheit</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="new-type-temscale" class="form-label">select a new temperature type</label>
+                    <select class="form-select" id="new-type-temscale" aria-label="Default select example" name="new_type">
+                        <option value=1 name="C" selected>Celsius</option>
+                        <option value=2 name="K">Kelvin</option>
+                        <option value=3 name="F">Fahrenheit</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <button type="button" class="btn btn-outline-success" onclick="submit()">Convert</button>
+                </div>
+                <div class="mb-3">
+                    <label for="result-temscale" class="form-label">Result</label>
+                    <input class="form-control" id="result-temscale" type="text" value="Readonly input here..." aria-label="readonly input example" readonly>
+                </div>
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        let URL = "http://127.0.0.1:8000/convert";
+
+
+        type_arrs = {
+            '1': 'C',
+            '2': 'K',
+            '3': 'F',
+        };
+
+        async function submit() {
+            try {
+                let select_old_type = document.querySelector('#old-type-temscale');
+                let select_new_type = document.querySelector('#new-type-temscale');
+                let TemscaleModel = {
+                    value: Number(document.getElementById("value-temscale").value),
+                    old_type: type_arrs[select_old_type.value],
+                    new_type: type_arrs[select_new_type.value],
+                };
+
+                let response = await fetch(URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(TemscaleModel),
+                });
+                let result = await response.json();
+                console.log(result)
+                document.getElementById("result-temscale").value = result["temperature_value"]
+            } catch (e) {
+                alert("error: " + e);
+            }
+        }
+    </script>
 </body>
 </html>
