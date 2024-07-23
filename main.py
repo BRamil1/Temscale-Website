@@ -5,13 +5,9 @@ from temscale import temscale
 
 app = FastAPI()
 
-
 origins = [
     "*",
-    "http://127.0.0.1:8000/",
-    "http://127.0.0.1/",
 ]
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,13 +19,14 @@ app.add_middleware(
 
 
 class TemscaleModel(BaseModel):
-    value: int
+    value: float
     old_type: str
     new_type: str
 
 
 @app.post("/convert")
 async def convert(temscale_model: TemscaleModel):
+    """Accepts data, old type and new type of temperature and returns already converted to the new type"""
     try:
         tem = temscale.Temscale(temscale_model.value, temscale_model.old_type)
         tem.convert(temscale_model.new_type)

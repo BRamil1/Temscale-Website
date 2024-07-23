@@ -1,4 +1,9 @@
-###
-POST http://127.0.0.1:8000/convert_json
+POST http://127.0.0.1:8000/convert
+Content-Type: application/json
+
+{"value": 100,
+"old_type": "C",
+"new_type": "K"}
 
 ###
+
